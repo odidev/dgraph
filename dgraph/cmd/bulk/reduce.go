@@ -208,7 +208,7 @@ var numCreated, numReused uint64
 
 func (mi *mapIterator) release(ie *iteratorEntry) {
 	//ie.bufGenesis.Reset()
-	ie.bufGenesis.Release()
+	//ie.bufGenesis.Release()
 	// select {
 	// case mi.freelist <- ie:
 	// default:
@@ -299,7 +299,7 @@ func (mi *mapIterator) startBatching(partitionsKeys [][]byte) {
 			// if tracked {
 			// 	fmt.Print("tracked offset", prevOffset)
 			// }
-			// ie.batch = all[:prevOffset]
+			ie.batch = all[:prevOffset]
 			// if tracked {
 			// 	fmt.Print("tracked offset", prevOffset)
 			// 	fmt.Println("length", len(ie.batch))
