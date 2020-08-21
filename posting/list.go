@@ -807,7 +807,6 @@ func (l *List) Rollup() ([]*bpb.KV, error) {
 	if out == nil {
 		return nil, nil
 	}
-
 	var kvs []*bpb.KV
 	kv := &bpb.KV{}
 	kv.Version = out.newMinTs
@@ -816,6 +815,15 @@ func (l *List) Rollup() ([]*bpb.KV, error) {
 	kv.UserMeta = []byte{meta}
 	kv.Value = val
 	kvs = append(kvs, kv)
+
+	defer func() {
+		// THIS IS IMPORTANT! This fixes the memory leak.
+		// calling FreePack(out.plist.Pack) without defer causes a strange
+		// "makeSlice" crash in `out.marshalPostingListPart` function.  maybe
+		// one of the parts of the posting list points to out.plist. I don't
+		// know.
+		codec.FreePack(out.plist.Pack)
+	}()
 
 	for startUid, plist := range out.parts {
 		// Any empty posting list would still have BitEmpty set. And the main posting list
