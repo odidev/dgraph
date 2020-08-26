@@ -7,8 +7,6 @@ matrix:
       go: 1.11.x
       language: go
 
-install: contrib/scripts/install.sh
-
 git:
   depth: 1000
 
